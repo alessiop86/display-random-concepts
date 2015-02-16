@@ -1,0 +1,28 @@
+div#left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 50%;
+    color: #333;
+    background: #eee;
+    position: absolute;
+    padding:5%
+}
+
+div#right {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    right: 0;
+    color: #000;
+    background: #f9f7ed;
+    position: absolute;
+}
+
+
+/*table.table td {
+    text-align: center;
+}*/
+table.table .radio {
+    margin-top: 0px;
+}
