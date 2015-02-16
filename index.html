@@ -13,6 +13,13 @@
     <link href="bower_components/bootstrap-material-design/dist/css/material-wfont.min.css" rel="stylesheet">
     <link href="random.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>  
+    <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
+
+  
 
 </head>
 
@@ -111,23 +118,24 @@
 
 
 
-    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
-
     </script>
-    <script src="dist/js/ripples.min.js"></script>
-    <script src="dist/js/material.min.js"></script>
+    <script src="bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+    <script src="bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
     <script src="//fezvrasta.github.io/snackbarjs/dist/snackbar.min.js"></script>
 
+    <script src="backbone-app.js"></script>
 
     <!--        <script src="//cdnjs.cloudflare.com/ajax/libs/noUiSlider/6.2.0/jquery.nouislider.min.js"></script> -->
     <script>
         $(function () {
-            $.material.init();
+            $.material.init();                        
 
         });
     </script>
+    
+    
 
 
 </body>
