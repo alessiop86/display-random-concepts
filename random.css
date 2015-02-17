@@ -4,7 +4,7 @@ div#left {
     left: 0;
     right: 50%;
     color: #333;
-    background: #eee;
+    background: #fff;
     position: absolute;
     padding:5%
 }
@@ -17,6 +17,7 @@ div#right {
     color: #000;
     background: #f9f7ed;
     position: absolute;
+    padding:5%;
 }
 
 
@@ -25,4 +26,7 @@ div#right {
 }*/
 table.table .radio {
     margin-top: 0px;
+}
+table.table {
+    background:#eee;
 }
