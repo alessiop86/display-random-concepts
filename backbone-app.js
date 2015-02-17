@@ -141,11 +141,31 @@
 })(jQuery);
 
 
-function spalaflashalert(collection) {
+function spalaflashalert(concepts) {
     
     //pulizia
     $("#right").html("");
     
+    //grafo vuoto
+      var g2 = {
+  "nodes": [ ],
+  "edges": [ ]
+};
+    
+    
+     for (var i=0; i < concepts.length; i++) {
+                
+                concepts[i].get('concept');
+                var concept = { 
+                    "id" : "n" + i,
+                    "label" : concepts[i].get('concept'),
+                    "x" : Math.random(),
+                    "y" : Math.random(),
+                    size: Math.random()
+                }
+                 g2.nodes.push(concept)   
+                               
+            }
     
     var g = {
   "nodes": [
@@ -192,7 +212,7 @@ function spalaflashalert(collection) {
 
     
 var s  = new sigma({
-  graph: g,
+  graph: g2,
   container: 'right'
 });
     
