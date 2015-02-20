@@ -144,11 +144,19 @@
 function spalaflashalert(concepts) {
     
     //pulizia
-    $("#right").html("");
+    $("#rightCanvas").html("");
     
     //grafo vuoto
       var g2 = {
-  "nodes": [ ],
+  "nodes": [ 
+      {
+      "id": "n2",
+      "label": "And a last one",
+      "x": 100,
+      "y": 3,
+      "size": 1
+    }
+  ],
   "edges": [ ]
 };
     
@@ -213,7 +221,7 @@ function spalaflashalert(concepts) {
     
 var s  = new sigma({
   graph: g2,
-  container: 'right'
+  container: 'rightCanvas'
 });
     
 }

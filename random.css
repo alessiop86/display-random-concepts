@@ -4,7 +4,7 @@ div#left {
     left: 0;
     right: 50%;
     color: #333;
-    background: #fff;
+    background: #f9f7ed;
     position: absolute;
     padding:5%
 }
@@ -15,9 +15,16 @@ div#right {
     left: 50%;
     right: 0;
     color: #000;
-    background: #f9f7ed;
+    background: #ffffff;
     position: absolute;
-    padding:5%;
+}
+
+div#rightCanvas {
+ background-color: #f9f7ed;
+border: 1px solid #e0ded7;
+height:90%;
+overflow: auto;
+margin: 20px;   
 }
 
 
