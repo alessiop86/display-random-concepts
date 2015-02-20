@@ -20,11 +20,15 @@ div#right {
 }
 
 div#rightCanvas {
- background-color: #f9f7ed;
-border: 1px solid #e0ded7;
-height:90%;
-overflow: auto;
-margin: 20px;   
+     background-color: #f9f7ed;
+    border: 1px solid #e0ded7;
+    height:90%;
+    overflow: auto;
+    margin: 20px;   
+    padding:80px;
+}
+div#innerRightCanvas {
+    width:100%;height:100%;   
 }
 
 

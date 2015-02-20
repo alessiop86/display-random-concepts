@@ -44,8 +44,6 @@
                     
               jQuery(this)[0].innerHTML = '<tr><td>' + model.get('counter') + '</td>' + '<td>' + '<div class="form-group">' + '<div class="form-control-wrapper"><input value="' + model.get('concept') + '" id="concept' + model.get('counter') + '_text" class="form-control"  type="text"><span class="material-input"></span></div>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" id="concept' + model.get('counter') + '_choice" value="mandatory">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" id="concept' + model.get('counter') + '_choice" value="random" checked="checked">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" id="concept' + model.get('counter') + '_choice" value="disabled" >' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<button class="btn btn-primary delete" type="button">Remove</button>' + '</td></tr>';
     });
-       /*     $(this.el).html('<td>' + this.counter + '</td>' + '<td>' + '<div class="form-group">' + '<div class="form-control-wrapper"><input value="' + this.model.get('concept') + '" id="concept' + this.model.get('counter') + '_text" class="form-control"  type="text"><span class="material-input"></span></div>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + this.model.get('counter') + '_choice" id="concept' + this.model.get('counter') + '_choice" value="mandatory">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + this.model.get('counter') + '_choice" id="concept' + this.model.get('counter') + '_choice" value="random" checked="checked">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + this.model.get('counter') + '_choice" id="concept' + this.model.get('counter') + '_choice" value="disabled" >' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<button class="btn btn-primary delete" type="button">Remove</button>' + '</td>');
-       */
             return this; // for chainable calls, like .render().el
         },
         // `unrender()`: Makes Model remove itself from the DOM.
@@ -78,6 +76,20 @@
             this.collection.bind('add', this.appendItem); // collection event binder
 
             this.counter = 0;
+            
+            for (var i=0;i<10;i++) {
+                this.counter++;
+                var item = new Item();
+                item.set({
+                    concept: "Concetto" + i,
+                    choice: "random",
+                    counter: this.counter
+                });
+                this.collection.add(item);
+            }
+            
+            
+            
             this.render(); // not all views are self-rendering. This one is.
         },
 
@@ -86,16 +98,25 @@
             'click button#random': 'displayRandom'
         },
 
+        appendItem: function (item) {
+            var itemView = new ItemView({
+                model: item
+            });
+            $('tbody', this.el).append(itemView.render().el);
+        },
+        
         // `render()`: Function in charge of rendering the entire view in `this.el`. Needs to be manually called by the user.
         render: function () {
 
-            //var self = this;
+            var self = this;
 
             $(this.el).append("<button id='add'>Add list item</button>");
-             $(this.el).append("&nbsp;<button id='random'>Random link objects</button>");
+            
+            $(this.el).append("&nbsp;<button id='random'>Random link objects</button>");
+            
             $(this.el).append("<table class=\"table table-striped table-hover \">" + "<thead>" + "<tr>" + "<th>#</th>" + "<th>Concept</th>" + "<th>Mandatory</th>" + "<th>Random</th>" + "<th>Disabled</th>" + "<th>Remove</th>" + "</tr>" + "</thead><tbody></tbody></table>");
 
-            _(this.collection.models).each(function (item) { // in case collection is not empty
+            this.collection.each(function (item) { 
                 self.appendItem(item);
             }, this);
         }
@@ -115,20 +136,15 @@
         },
         
         
-        appendItem: function (item) {
-            var itemView = new ItemView({
-                model: item
-            });
-            $('tbody', this.el).append(itemView.render().el);
-        },
+
         
         displayRandom: function() {
                         
-            for (var i=0; i < this.collection.models.length; i++) {
+        /*    for (var i=0; i < this.collection.models.length; i++) {
                 var model = this.collection.models[i];                
-                model.get('concept');
+                alert( model.get('concept') );
                 
-            }
+            }*/
             
             spalaflashalert(this.collection.models);
         }
@@ -144,84 +160,69 @@
 function spalaflashalert(concepts) {
     
     //pulizia
-    $("#rightCanvas").html("");
+    $("#innerRightCanvas").html("");
     
     //grafo vuoto
       var g2 = {
-  "nodes": [ 
-      {
-      "id": "n2",
-      "label": "And a last one",
-      "x": 100,
-      "y": 3,
-      "size": 1
-    }
-  ],
+  "nodes": [ ],
   "edges": [ ]
 };
     
     
-     for (var i=0; i < concepts.length; i++) {
+    var nNodes = 0;
+    for (var i=0; i < concepts.length; i++) {
                 
-                concepts[i].get('concept');
-                var concept = { 
-                    "id" : "n" + i,
-                    "label" : concepts[i].get('concept'),
-                    "x" : Math.random(),
-                    "y" : Math.random(),
-                    size: Math.random()
-                }
-                 g2.nodes.push(concept)   
-                               
+        var display = concepts[i].get("choice");
+        
+        if (display == "disabled" || (display == "random" && Math.random() < 0.55) )
+            continue;
+        
+        //NODI 
+        var id = "n" + nNodes;
+        var concept = { 
+            "id" : id,
+            "label" : concepts[i].get('concept'),
+            "x" : Math.round(100 * (0.5 - Math.random())),
+            "y" :  Math.round(100 * (0.5 - Math.random())),
+            'size': 1,
+            'color': 'rgb('+Math.round(Math.random()*256)+','+
+                  Math.round(Math.random()*256)+','+
+                  Math.round(Math.random()*256)+')'
             }
+            //console.log(concept)
+            nNodes++;
+            g2.nodes.push(concept)                
+        }
     
-    var g = {
-  "nodes": [
-    {
-      "id": "n0",
-      "label": "A node",
-      "x": 0,
-      "y": 0,
-      "size": 3
-    },
-    {
-      "id": "n1",
-      "label": "Another node",
-      "x": 3,
-      "y": 1,
-      "size": 2
-    },
-    {
-      "id": "n2",
-      "label": "And a last one",
-      "x": 1,
-      "y": 3,
-      "size": 1
+    var nEdges = 0;
+    for (var i=0; i < nNodes; i++) {
+         //COLLEGAMENTI 
+        var edgesForCurrentNode = Math.round(Math.pow(Math.random(),2) * 3);
+        for (var j=0; j<edgesForCurrentNode;j++) {
+
+            var start = "n" + Math.round(Math.random()*(nNodes -1));
+            var end = "n" + Math.round(Math.random()*(nNodes -1));
+            var edge = {
+              "id": "e" + nEdges,
+              "source": start,
+              "target": end
+            };
+            nEdges++;
+          //  console.log(edge)
+            g2.edges.push(edge)   
+        }
+
     }
-  ],
-  "edges": [
-    {
-      "id": "e0",
-      "source": "n0",
-      "target": "n1"
-    },
-    {
-      "id": "e1",
-      "source": "n1",
-      "target": "n2"
-    },
-    {
-      "id": "e2",
-      "source": "n2",
-      "target": "n0"
-    }
-  ]
-};
+    
+   console.log(g2)
 
     
-var s  = new sigma({
-  graph: g2,
-  container: 'rightCanvas'
-});
+    var s  = new sigma({
+      graph: g2,
+      container: 'innerRightCanvas'
+    });
+
+
+  
     
 }
