@@ -22,16 +22,29 @@
         tagName: 'tr',
 
         events: {
-            'click button.delete': 'remove'
+            'click button.delete': 'remove',
+            'change input[type=text]': 'conceptChanged',
+            'click input[type=radio]': 'displayChoiceChanged'
         },
 
         initialize: function () {
-            _.bindAll(this, 'render', 'unrender', 'remove'); // every function that uses 'this' as the current object should be in here
+            _.bindAll(this, 'render', 'unrender', 'remove','conceptChanged','displayChoiceChanged'); // every function that uses 'this' as the current object should be in here
 
             //this.model.bind('change', this.render);
             this.model.bind('remove', this.unrender);
+            
         },
+        conceptChanged:function(evt) {
+            
+           var value = $(evt.currentTarget).val();
+            this.model.set('concept',value)
 
+        },
+        
+        displayChoiceChanged:function(evt) {
+            var value = $(evt.currentTarget).val();
+            this.model.set('displayChoice',value)
+        },
 
         render: function () {
             
@@ -42,7 +55,7 @@
             //non posso aggiornare html di un tr
                 $(this.el).each(function(){                    
                     
-              jQuery(this)[0].innerHTML = '<tr><td>' + model.get('counter') + '</td>' + '<td>' + '<div class="form-group">' + '<div class="form-control-wrapper"><input value="' + model.get('concept') + '" id="concept' + model.get('counter') + '_text" class="form-control"  type="text"><span class="material-input"></span></div>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" id="concept' + model.get('counter') + '_choice" value="mandatory">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" id="concept' + model.get('counter') + '_choice" value="random" checked="checked">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" id="concept' + model.get('counter') + '_choice" value="disabled" >' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<button class="btn btn-primary delete" type="button">Remove</button>' + '</td></tr>';
+              jQuery(this)[0].innerHTML = '<tr><td>' + model.get('counter') + '</td>' + '<td>' + '<div class="form-group">' + '<div class="form-control-wrapper"><input value="' + model.get('concept') + '" class="form-control concept"  type="text"><span class="material-input"></span></div>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" value="mandatory">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" value="random" checked="checked">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" value="disabled" >' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<button class="btn btn-primary delete" type="button">Remove</button>' + '</td></tr>';
     });
             return this; // for chainable calls, like .render().el
         },
