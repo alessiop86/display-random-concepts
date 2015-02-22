@@ -82,7 +82,7 @@
                 var item = new Item();
                 item.set({
                     concept: "Concetto" + i,
-                    choice: "random",
+                    displayChoice: "random",
                     counter: this.counter
                 });
                 this.collection.add(item);
@@ -129,7 +129,7 @@
             var item = new Item();
             item.set({
                 concept: prompt("ahoao"),
-                choice: "random",
+                displayChoice : "random",
                 counter: this.counter
             });
             this.collection.add(item);
@@ -139,13 +139,7 @@
 
         
         displayRandom: function() {
-                        
-        /*    for (var i=0; i < this.collection.models.length; i++) {
-                var model = this.collection.models[i];                
-                alert( model.get('concept') );
-                
-            }*/
-            
+                                     
             spalaflashalert(this.collection.models);
         }
 
@@ -157,25 +151,6 @@
 })(jQuery);
 
 
-/*var s =  new sigma({      
-        renderers: [ {
-            container: document.getElementById('innerRightCanvas'),
-            type:'canvas'   
-        }
-        ],
-        settings: {
-            sideMargin:80,
-            labelThreshold:1,
-            mouseEnabled:false,
-            enableHovering: true,
-            autoRescale: true,
-            autoResize:false,
-            rescaleIgnoreSize: true
-            
-        }
-        
-    });
-*/
 
 var  g2 = {
   "nodes": [], /*[ {id:"ciao", "x":1,"y":1, size:2}   ],*/
@@ -202,182 +177,59 @@ var s2 =  new sigma(  {
 
 
 function spalaflashalert(concepts) {
-    
-    //pulizia
-    //$("#innerRightCanvas").html("");
-    
-    console.log("BEFORE")
-    s2.graph.clear()
-//    console.log(g2);
- var g2 = { }
- g2.nodes = []
-  g2.edges = []
-    //grafo vuoto
-  /* var    g2 = {
-  "nodes": [ ],
-  "edges": [ ]
-};*/
-    
-    
-    var nNodes = 0;
-    for (var i=0; i < concepts.length; i++) {
-                
-        var display = concepts[i].get("choice");
         
-        if (display == "disabled" || (display == "random" && Math.random() < 0.55) )
+    s2.graph.clear();
+
+    for (var i=0; i < concepts.length; i++) {                
+        
+        if (concepts[i].get("displayChoice") == "disabled" || ( concepts[i].get("displayChoice") == "random" && Math.random() < 0.5) )
             continue;
         
         //NODI 
-        var id = "n" + nNodes;
+        var id = "n" + s2.graph.nodes().length;//nodesDisplayed.length;
         var concept = { 
             "id" : id,
             "label" : concepts[i].get('concept'),
-            "x" : Math.round(200 * (0.5 - Math.random())), //Math.round(Math.random() * 100), //
-            "y" : Math.round(200 * (0.5 - Math.random())), //Math.round(Math.random() * 100 ), 
+            "x" : Math.round(200 * (0.5 - Math.random())), 
+            "y" : Math.round(200 * (0.5 - Math.random())), 
             'size': Math.round(Math.random() * 6) + 2,
-            'color': 'rgb('+Math.round(Math.random()*256)+','+
-                  Math.round(Math.random()*256)+','+
-                  Math.round(Math.random()*256)+')'
+            'color': 'rgb('+Math.round(Math.random()*256)+','+  Math.round(Math.random()*256)+','+ Math.round(Math.random()*256)+')'
             }
-            //console.log(concept)
-            nNodes++;
-            g2.nodes.push(concept)                
+           
             s2.graph.addNode(concept)
         }
     
-    var nEdges = 0;
-    for (var i=0; i < nNodes; i++) {
-         //COLLEGAMENTI 
+    
+    
+    for (var i=0; i < s2.graph.nodes().length; i++) {
+        
         var edgesForCurrentNode = Math.round(Math.pow(Math.random(),2) * 3);
+        
         for (var j=0; j<edgesForCurrentNode;j++) {
 
-            var start = g2.nodes[i].id
+            var start = s2.graph.nodes()[i].id
             var end = start;
+            
+            //edges allowed only between different nodes
             while (end == start) {            
-                end = "n" + Math.round(Math.random()*(nNodes -1));
+                end = "n" + Math.round(Math.random()*(s2.graph.nodes().length -1));
             }
             
-            
-            
-            
-            
             var edge = {
-              "id": "e" + nEdges,
+              "id": "e" + s2.graph.edges().length,
               "source": start,
               "target": end
             };
-            nEdges++;
-          //  console.log(edge)
-            g2.edges.push(edge)  
+            
+            
             s2.graph.addEdge(edge)
         }
 
     }
-    
-   console.log("AFTER")
-   console.log(g2)
-    /*console.log(s2)
-      
-    s2.addRenderer({
-            container: document.getElementById('innerRightCanvas'),
-            type:'canvas'   
-        });*/
-        
-   /* var s =  new sigma({      
-        renderers: [ {
-            container: document.getElementById('innerRightCanvas'),
-            type:'canvas'   
-        }
-        ],
-        graph: g2,
-        settings: {
-            sideMargin:80,
-            labelThreshold:1,
-            mouseEnabled:false,
-            enableHovering: true,
-            autoRescale: true,
-            autoResize:false,
-            rescaleIgnoreSize: true
-            
-        }
-        
-    });*/
-    
-    
-   //s.graph(g2);
-    
-    /*var s  = new sigma({
-      graph: g2,
-        type:'canvas',
-      container: 'innerRightCanvas',
-        settings: {
-            sideMargin:80,
-            labelThreshold:1,
-            mouseEnabled:false,
-            enableHovering: true,
-            autoRescale: true,
-            autoResize:false,
-            rescaleIgnoreSize: true
-            
-        }
-        
-    });*/
-    //Singleton.getInstance(g2);
-
-    //s2.refresh()
-   
-   //s2.graph.addNode({id:"ciao", "x":1,"y":1, size:2})
-   //s2.graph.addNode({id:"ciao2", "x":3,"y":3, size:2})
-   s2.refresh()
+    console.log("NODES");console.log(s2.graph.nodes());
+    console.log("EDGES");console.log(s2.graph.edges());
+    s2.refresh()
 
   
     
 }
-
-var Singleton = (function () {
-    var instance;
- 
-    function createInstance(g2) {
-        
-         var s =  new sigma({      
-        renderers: [ {
-            container: document.getElementById('innerRightCanvas'),
-            type:'canvas'   
-        }
-        ],
-        graph: g2,
-        settings: {
-            sideMargin:80,
-            labelThreshold:1,
-            mouseEnabled:false,
-            enableHovering: true,
-            autoRescale: true,
-            autoResize:false,
-            rescaleIgnoreSize: true
-            
-        }
-        
-        });
-        return s;
-    }
- 
-    return {
-        getInstance: function (g2) {
-            if (!instance) {
-                console.log("Create")
-               // instance = createInstance(g2);
-            }
-            else {
-                console.log("Do nothing")
-                //instance.kill()
-                //instance = createInstance(g2);
-                //console.log(instance.graph.nodes)
-                //instance.graph.nodes(g2.nodes)
-                //console.log(g2)                
-                instance.refresh()
-                
-            }
-            return instance;
-        }
-    };
-})();
