@@ -8,8 +8,7 @@
     var Item = Backbone.Model.extend({
         defaults: {
             concept: 'description',
-            choice: 'random',
-            counter: 0
+            choice: 'random'
         }
     });
 
@@ -28,11 +27,8 @@
         },
 
         initialize: function () {
-            _.bindAll(this, 'render', 'unrender', 'remove','conceptChanged','displayChoiceChanged'); // every function that uses 'this' as the current object should be in here
-
-            //this.model.bind('change', this.render);
-            this.model.bind('remove', this.unrender);
-            
+            _.bindAll(this, 'render', 'unrender', 'remove','conceptChanged','displayChoiceChanged'); 
+            this.model.bind('remove', this.unrender);            
         },
         conceptChanged:function(evt) {
             
@@ -48,30 +44,22 @@
 
         render: function () {
             
-            
-            //workaround per accedere a this.model e this.counter
+            //workaround to access @ this.model from the anonymous inner function
+            //making it a closure for the free variable model
             var model = this.model
             
-            //non posso aggiornare html di un tr
-                $(this.el).each(function(){                    
+            //workaround because .html() is not working with <tr>
+            $(this.el).each(function(){                    
                     
-              jQuery(this)[0].innerHTML = '<tr><td>' + model.get('counter') + '</td>' + '<td>' + '<div class="form-group">' + '<div class="form-control-wrapper"><input value="' + model.get('concept') + '" class="form-control concept"  type="text"><span class="material-input"></span></div>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" value="mandatory">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" value="random" checked="checked">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" name="concept' + model.get('counter') + '_choice" value="disabled" >' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<button class="btn btn-primary delete" type="button">Remove</button>' + '</td></tr>';
+              jQuery(this)[0].innerHTML = '<tr><td>' + '<div class="form-group">' + '<div class="form-control-wrapper"><input value="' + model.get('concept') + '" class="form-control concept"  type="text"><span class="material-input"></span></div>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" value="mandatory">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" value="random" checked="checked">' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<div class="radio radio-primary">' + '<label>' + '<input type="radio" value="disabled" >' + '<span class="circle"></span><span class="check"></span>' + '</label>' + '</div>' + '</td>' + '<td>' + '<button class="btn btn-primary delete" type="button">Remove</button>' + '</td></tr>';
     });
-            return this; // for chainable calls, like .render().el
+            return this; 
         },
-        // `unrender()`: Makes Model remove itself from the DOM.
+        
         unrender: function () {
             $(this.el).remove();
         },
-        // `swap()` will interchange an `Item`'s attributes. When the `.set()` model function is called, the event `change` will be triggered.
-        /*swap: function(){
-      var swapped = {
-        part1: this.model.get('part2'),
-        part2: this.model.get('part1')
-      };
-      this.model.set(swapped);
-    },*/
-        // `remove()`: We use the method `destroy()` to remove a model from its collection. Normally this would also delete the record from its persistent storage, but we have overridden that (see above).
+
         remove: function () {
             this.model.destroy();
         }
@@ -79,31 +67,26 @@
 
     var ListView = Backbone.View.extend({
 
-        el: $('div#left'), // attaches `this.el` to an existing element.
+        // attaches `this.el` to an existing element.
+        el: $('div#left'), 
 
-        // `initialize()`: Automatically called upon instantiation. Where you make all types of bindings, _excluding_ UI events, such as clicks, etc.
         initialize: function () {
             _.bindAll(this, 'render', 'addItem', 'appendItem'); // every function that uses 'this' as the current object should be in here
 
             this.collection = new List();
             this.collection.bind('add', this.appendItem); // collection event binder
 
-            this.counter = 0;
             
             for (var i=0;i<10;i++) {
-                this.counter++;
                 var item = new Item();
                 item.set({
                     concept: "Concetto" + i,
                     displayChoice: "random",
-                    counter: this.counter
                 });
                 this.collection.add(item);
             }
-            
-            
-            
-            this.render(); // not all views are self-rendering. This one is.
+                                    
+            this.render(); //self-rendering view
         },
 
         events: {
@@ -123,11 +106,22 @@
 
             var self = this;
 
-            $(this.el).append("<button id='add'>Add list item</button>");
+            $(this.el).append("<button id='add'>Add item</button>");
             
-            $(this.el).append("&nbsp;<button id='random'>Random link objects</button>");
+            $(this.el).append("&nbsp;<button id='random'>Generate random graph</button>");
             
-            $(this.el).append("<table class=\"table table-striped table-hover \">" + "<thead>" + "<tr>" + "<th>#</th>" + "<th>Concept</th>" + "<th>Mandatory</th>" + "<th>Random</th>" + "<th>Disabled</th>" + "<th>Remove</th>" + "</tr>" + "</thead><tbody></tbody></table>");
+            $(this.el).append("<table class=\"table table-striped table-hover \">" 
+                                + "<thead>"
+                                + "<tr>" 
+                                + "<th>Concept</th>" 
+                                + "<th>Mandatory</th>" 
+                                + "<th>Random</th>"
+                                + "<th>Disabled</th>" 
+                                + "<th>Remove</th>"
+                                + "</tr>"
+                                + "</thead>"
+                                +"<tbody></tbody>"
+                                +"</table>");
 
             this.collection.each(function (item) { 
                 self.appendItem(item);
@@ -138,12 +132,10 @@
         ,
         addItem: function () {
 
-            this.counter++;
             var item = new Item();
             item.set({
-                concept: prompt("ahoao"),
+                concept: prompt("Write concept:"),
                 displayChoice : "random",
-                counter: this.counter
             });
             this.collection.add(item);
         },
