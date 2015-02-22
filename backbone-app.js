@@ -4,11 +4,12 @@
     Backbone.sync = function (method, model, success, error) {
         success();
     }
-
+    
+    /* Model */
     var Item = Backbone.Model.extend({
         defaults: {
             concept: 'description',
-            choice: 'random'
+            displayChoice: 'random'
         }
     });
 
@@ -16,6 +17,10 @@
         model: Item
     });
 
+    /* End of model */
+    
+    /* Views */
+    
     var ItemView = Backbone.View.extend({
 
         tagName: 'tr',
@@ -65,26 +70,27 @@
         }
     });
 
+    /*Main view (List) */
     var ListView = Backbone.View.extend({
 
-        // attaches `this.el` to an existing element.
         el: $('div#left'), 
 
         initialize: function () {
-            _.bindAll(this, 'render', 'addItem', 'appendItem'); // every function that uses 'this' as the current object should be in here
+            _.bindAll(this, 'render', 'addItem', 'appendItem'); 
 
             this.collection = new List();
-            this.collection.bind('add', this.appendItem); // collection event binder
+            this.collection.bind('add', this.appendItem);
 
             
-            for (var i=0;i<10;i++) {
+            /* Remove this block below, just for showcase purpose */
+            var testModel = getTestModel();
+            for (var i=0;i<testModel.length;i++) {                
                 var item = new Item();
-                item.set({
-                    concept: "Concetto" + i,
-                    displayChoice: "random",
-                });
+                item.set(testModel[i]);
                 this.collection.add(item);
             }
+            /* End of test showcase block */
+            
                                     
             this.render(); //self-rendering view
         },
@@ -100,8 +106,7 @@
             });
             $('tbody', this.el).append(itemView.render().el);
         },
-        
-        // `render()`: Function in charge of rendering the entire view in `this.el`. Needs to be manually called by the user.
+                
         render: function () {
 
             var self = this;
@@ -150,12 +155,16 @@
 
 
     });
+    
+    /* end of Views */
 
-    // **listView instance**: Instantiate main app view.
+    //Instantiate main app view.
     var listView = new ListView();
 })(jQuery);
 
+/* End of Backbone.js app */
 
+/* Start of Graph generation code */
 
 var  g2 = {
   "nodes": [],
@@ -171,26 +180,35 @@ var s2 =  new sigma(  {
             sideMargin:80,
             labelThreshold:1,
             mouseEnabled:false,
-            enableHovering: true,
-            autoRescale: true,
+            enableHovering: false,
+            autoRescale: false,
             autoResize:false,
-            rescaleIgnoreSize: true
+            rescaleIgnoreSize: false
             
         }, graph: g2
         
     });
+//console.log(s2);
 
-
+/**
+Grap
+*/
 function displayRandomGraph(concepts) {
         
+    //disable multiple clicks
+    //$("#random").prop('disabled', true);
+    //setTimeout(function() {  $("#random").prop('disabled', false); }, 500);
+    
     s2.graph.clear();
 
+    //nodes
     for (var i=0; i < concepts.length; i++) {                
         
+        //Compute display choice
         if (concepts[i].get("displayChoice") == "disabled" || ( concepts[i].get("displayChoice") == "random" && Math.random() < 0.5) )
             continue;
         
-        //NODI 
+         
         var id = "n" + s2.graph.nodes().length;
         var concept = { 
             "id" : id,
@@ -202,10 +220,9 @@ function displayRandomGraph(concepts) {
             }
            
             s2.graph.addNode(concept)
-        }
+    }
     
-    
-    
+    //edges    
     for (var i=0; i < s2.graph.nodes().length; i++) {
         
         var edgesForCurrentNode = Math.round(Math.pow(Math.random(),2) * 3);
@@ -231,8 +248,28 @@ function displayRandomGraph(concepts) {
         }
 
     }
+
     //console.log("NODES");console.log(s2.graph.nodes());
     //console.log("EDGES");console.log(s2.graph.edges());
     s2.refresh()
     
+}
+
+/* End of Graph generation code */
+
+
+/**
+test showcase
+*/
+function getTestModel() {
+    
+   var testCollection = [];
+   for (var i=0;i<5;i++) {
+        var item = {
+            concept: "Concept " + i,
+            displayChoice: "random",
+        };
+        testCollection.push(item);
+    }
+    return testCollection;
 }
