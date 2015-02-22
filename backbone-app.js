@@ -145,7 +145,7 @@
         
         displayRandom: function() {
                                      
-            spalaflashalert(this.collection.models);
+            displayRandomGraph(this.collection.models);
         }
 
 
@@ -158,7 +158,7 @@
 
 
 var  g2 = {
-  "nodes": [], /*[ {id:"ciao", "x":1,"y":1, size:2}   ],*/
+  "nodes": [],
   "edges": []
 };
 
@@ -181,7 +181,7 @@ var s2 =  new sigma(  {
     });
 
 
-function spalaflashalert(concepts) {
+function displayRandomGraph(concepts) {
         
     s2.graph.clear();
 
@@ -191,7 +191,7 @@ function spalaflashalert(concepts) {
             continue;
         
         //NODI 
-        var id = "n" + s2.graph.nodes().length;//nodesDisplayed.length;
+        var id = "n" + s2.graph.nodes().length;
         var concept = { 
             "id" : id,
             "label" : concepts[i].get('concept'),
@@ -231,10 +231,8 @@ function spalaflashalert(concepts) {
         }
 
     }
-    console.log("NODES");console.log(s2.graph.nodes());
-    console.log("EDGES");console.log(s2.graph.edges());
+    //console.log("NODES");console.log(s2.graph.nodes());
+    //console.log("EDGES");console.log(s2.graph.edges());
     s2.refresh()
-
-  
     
 }
