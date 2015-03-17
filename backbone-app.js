@@ -223,32 +223,34 @@ function displayRandomGraph(concepts) {
     }
     
     //edges    
-    for (var i=0; i < s2.graph.nodes().length; i++) {
-        
-        var edgesForCurrentNode = Math.round(Math.pow(Math.random(),2) * 3);
-        
-        for (var j=0; j<edgesForCurrentNode;j++) {
+    if (s2.graph.nodes().length > 1) {
+        for (var i=0; i < s2.graph.nodes().length; i++) {
 
-            var start = s2.graph.nodes()[i].id
-            var end = start;
-            
-            //edges allowed only between different nodes
-            while (end == start) {            
-                end = "n" + Math.round(Math.random()*(s2.graph.nodes().length -1));
+            var edgesForCurrentNode = Math.round(Math.pow(Math.random(),2) * 3);
+
+            for (var j=0; j<edgesForCurrentNode;j++) {
+
+                var start = s2.graph.nodes()[i].id
+                var end = start;
+
+                //edges allowed only between different nodes
+                while (end == start) {                            
+                    end = "n" + Math.round(Math.random()*(s2.graph.nodes().length -1));
+                }
+
+                var edge = {
+                  "id": "e" + s2.graph.edges().length,
+                  "source": start,
+                  "target": end
+                };
+
+
+                s2.graph.addEdge(edge)
             }
-            
-            var edge = {
-              "id": "e" + s2.graph.edges().length,
-              "source": start,
-              "target": end
-            };
-            
-            
-            s2.graph.addEdge(edge)
+
         }
-
     }
-
+        
     //console.log("NODES");console.log(s2.graph.nodes());
     //console.log("EDGES");console.log(s2.graph.edges());
     s2.refresh()
